@@ -25,6 +25,7 @@ const image = { uri: 'https://reactjs.org/logo-og.png' };
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Genres from '../../components/Genres';
 import ModalLink from '../../components/ModalLink';
+import { hasMovie, saveMovie, deleteMovie } from '../../utils/storage';
 
 function Detail() {
   const navigation = useNavigation();
@@ -32,6 +33,7 @@ function Detail() {
 
   const [movie, setMovie] = useState({});
   const [openLink, setOpenLink] = useState(false);
+  const [favoritedMovie, setFavotiredMovie] = useState(false);
 
   useEffect(() => {
     let isActive = true;
@@ -47,9 +49,10 @@ function Detail() {
         .catch((err) => {
           console.log(err);
         });
-
       if (isActive) {
         setMovie(response.data);
+        const isFavorite = await hasMovie(response.data);
+        setFavotiredMovie(isFavorite);
       }
     }
 
@@ -62,8 +65,21 @@ function Detail() {
     };
   }, []);
 
-  console.log(movie);
-  // 'cover' | 'contain' | 'stretch' | 'repeat' | 'center';
+  console.log(favoritedMovie);
+
+  async function handleFavoriteMovie(movie) {
+    console.log('AAAAAAAAAAAAA', movie.id)
+    if (favoritedMovie) {
+      await deleteMovie(movie.id);
+      setFavotiredMovie(false);
+      alert('Filme removido com sucesso');
+    } else {
+      await saveMovie('@saved', movie);
+      setFavotiredMovie(true);
+      alert('Filme salvo na lista');
+    }
+  }
+
   return (
     <Container>
       <Header
@@ -76,8 +92,12 @@ function Detail() {
           <HeaderButton activeOpacity={0.7} onPress={() => navigation.goBack()}>
             <Feather name="arrow-left" size={28} color="#FFF" />
           </HeaderButton>
-          <HeaderButton>
-            <Ionicons name="bookmark" size={28} color="#FFF" />
+          <HeaderButton onPress={() => handleFavoriteMovie(movie)}>
+            {favoritedMovie ? (
+              <Ionicons name="bookmark" size={28} color="#FFF" />
+            ) : (
+              <Ionicons name="bookmark-outline" size={28} color="#FFF" />
+            )}
           </HeaderButton>
         </ContainerButton>
       </Header>

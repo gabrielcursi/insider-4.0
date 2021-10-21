@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, ActivityIndicator } from 'react-native';
+import { ScrollView, ActivityIndicator, View } from 'react-native';
 
 import {
   Container,
@@ -19,6 +19,7 @@ import { Feather } from '@expo/vector-icons';
 import api, { key } from '../../services/api';
 import { getListMovies, randomBanner } from '../../utils/utils';
 import { useNavigation } from '@react-navigation/native';
+import { FlatList } from 'react-native-gesture-handler';
 
 function Home() {
   const [nowMovies, setNowMovies] = useState([]);
@@ -141,8 +142,24 @@ function Home() {
 
         <SliderMovie
           horizontal
+          contentContainerStyle={{
+            paddingRight: 8,
+          }}         
+    
+
+          // contentContainerStyle={{ paddingBottom: 68, paddingTop: 103 }}
           showsHorizontalScrollIndicator={false}
           data={nowMovies}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                // styles.container,
+                paddingVertical: 50,
+                marginBottom: 50,
+                marginTop: 50,
+              }}
+            />
+          )}
           renderItem={({ item }) => (
             <SliderItem
               data={item}

@@ -6,7 +6,6 @@ import { WebView } from 'react-native-webview';
 import { Container, Loading } from '../../pages/Home/styles';
 
 const ModalLink = ({ link, title, closeModal }) => {
-  console.log('abcd link', link);
 
   const LoadingIndicatorView = () => {
     return (
